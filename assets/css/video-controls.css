@@ -1,0 +1,102 @@
+/* VIDEO CONTROLS */
+
+.video-controls {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.video-control-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    color: white;
+    font-size: 14px;
+}
+
+.video-control-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Estilos específicos por estado */
+.play-pause-btn[data-state="playing"] {
+    /* Añade aquí estilos para cuando está reproduciendo */
+}
+
+.play-pause-btn[data-state="paused"] {
+    /* Añade aquí estilos para cuando está pausado */
+}
+
+.mute-btn[data-state="muted"] {
+    /* Añade aquí estilos para cuando está muteado */
+}
+
+.mute-btn[data-state="unmuted"] {
+    /* Añade aquí estilos para cuando está con sonido */
+}
+
+/* NAVIGATION CONTROLS */
+
+.nav-controls {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+.nav-control-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    color: white;
+    font-size: 14px;
+}
+
+.nav-control-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.nav-control-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.nav-control-btn:disabled:hover {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.nav-control-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: white;
+}
+
+.project-counter {
+    padding: 4px 12px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    user-select: none;
+}

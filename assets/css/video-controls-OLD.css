@@ -1,0 +1,46 @@
+/* VIDEO CONTROLS */
+
+.video-controls {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.video-control-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    color: white;
+    font-size: 14px;
+}
+
+.video-control-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Estilos específicos por estado */
+.play-pause-btn[data-state="playing"] {
+    /* Añade aquí estilos para cuando está reproduciendo */
+}
+
+.play-pause-btn[data-state="paused"] {
+    /* Añade aquí estilos para cuando está pausado */
+}
+
+.mute-btn[data-state="muted"] {
+    /* Añade aquí estilos para cuando está muteado */
+}
+
+.mute-btn[data-state="unmuted"] {
+    /* Añade aquí estilos para cuando está con sonido */
+}
