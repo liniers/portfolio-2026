@@ -78,13 +78,17 @@ function maquetar_thumbs(data){
             miniaturaCuadrada.style.backgroundPosition = 'center';
         }
         
-        // PATRÓN ALTERNADO: 6-5-6-5 thumbs por fila
+        // PATRÓN ALTERNADO: Configurable mediante CSS custom properties
         
-        // Configuración del patrón
-        const spacingH = 12;          // Espaciado horizontal entre elementos
-        const spacingV = 8;          // Espaciado vertical entre filas
-        const startRow = 0;           // Fila inicial
-        const startCol = 6;           // Columna inicial
+        // Leer configuración desde CSS custom properties
+        const rootStyles = getComputedStyle(document.documentElement);
+        const itemsPerRow1 = parseInt(rootStyles.getPropertyValue('--grid-items-per-row-1')) || 6;
+        const itemsPerRow2 = parseInt(rootStyles.getPropertyValue('--grid-items-per-row-2')) || 5;
+        const spacingH = parseInt(rootStyles.getPropertyValue('--grid-spacing-horizontal')) || 12;
+        const spacingV = parseInt(rootStyles.getPropertyValue('--grid-spacing-vertical')) || 8;
+        const thumbSpan = parseInt(rootStyles.getPropertyValue('--grid-thumb-span')) || 2;
+        const startRow = parseInt(rootStyles.getPropertyValue('--grid-start-row')) || 0;
+        const startCol = parseInt(rootStyles.getPropertyValue('--grid-start-col')) || 6;
         
         // Calcular en qué fila está este elemento
         let currentRow = 0;
@@ -93,7 +97,7 @@ function maquetar_thumbs(data){
         
         // Contar elementos hasta llegar al índice actual
         while (tempIndex < index) {
-            const itemsInThisRow = currentRow % 2 === 0 ? 6 : 5; // Alterna 6-5
+            const itemsInThisRow = currentRow % 2 === 0 ? itemsPerRow1 : itemsPerRow2; // Alterna según config
             elementsInCurrentRow++;
             tempIndex++;
             
@@ -109,8 +113,9 @@ function maquetar_thumbs(data){
         // Calcular posición en el grid
         const gridRow = startRow + (currentRow * spacingV);
         
-        // Si es fila impar (5 elementos), empezar en columna 6
-        const colOffset = currentRow % 2 === 0 ? 0 : 6;
+        // Calcular offset de columna para filas impares (más centrado)
+        const itemsInCurrentRow = currentRow % 2 === 0 ? itemsPerRow1 : itemsPerRow2;
+        const colOffset = currentRow % 2 === 0 ? 0 : spacingH / 2;
         const gridColumn = startCol + colOffset + (colIndex * spacingH);
         
         
@@ -120,9 +125,9 @@ function maquetar_thumbs(data){
             gridColumn: gridColumn
         });
         
-        // Asignar posición en el grid - SIEMPRE span 2 para todos
-        const gridRowValue = `${gridRow} / span 2`;
-        const gridColValue = `${gridColumn} / span 2`;
+        // Asignar posición en el grid - Usa el thumbSpan configurado
+        const gridRowValue = `${gridRow} / span ${thumbSpan}`;
+        const gridColValue = `${gridColumn} / span ${thumbSpan}`;
         
         miniaturaCuadrada.style.setProperty('grid-row', gridRowValue);
         miniaturaCuadrada.style.setProperty('grid-column', gridColValue);
@@ -312,6 +317,10 @@ if (headerLeftButtons.length === 2) {
                     });
                 }
                 
+                // Leer configuración actual de CSS para restaurar correctamente
+                const rootStyles = getComputedStyle(document.documentElement);
+                const thumbSpan = parseInt(rootStyles.getPropertyValue('--grid-thumb-span')) || 2;
+                
                 thumbs.forEach((thumb) => {
                     const classList = Array.from(thumb.classList);
                     const thumbClass = classList.find(c => c.startsWith('thumb-'));
@@ -324,8 +333,8 @@ if (headerLeftButtons.length === 2) {
                     thumb.style.height = '';
                     
                     if (posicionesOriginales[index]) {
-                        thumb.style.gridRow = `${posicionesOriginales[index].gridRow} / span 2`;
-                        thumb.style.gridColumn = `${posicionesOriginales[index].gridColumn} / span 2`;
+                        thumb.style.gridRow = `${posicionesOriginales[index].gridRow} / span ${thumbSpan}`;
+                        thumb.style.gridColumn = `${posicionesOriginales[index].gridColumn} / span ${thumbSpan}`;
                         thumb.style.aspectRatio = '1 / 1';
                     }
                 });
@@ -423,6 +432,11 @@ if (toggleBtn) {
         const thumbs = document.querySelectorAll('[class*="thumb-"]');
         imagesVisible = !imagesVisible;
         
+        // Leer configuración actual de CSS
+        const rootStyles = getComputedStyle(document.documentElement);
+        const thumbSpan = parseInt(rootStyles.getPropertyValue('--grid-thumb-span')) || 2;
+        const largeSpan = parseInt(rootStyles.getPropertyValue('--grid-thumb-span-large')) || thumbSpan + 3;
+        
         // Capturar estado inicial con Flip
         const state = Flip.getState(thumbs);
         
@@ -437,13 +451,13 @@ if (toggleBtn) {
                 
                 // Cambiar span según visibilidad de imágenes
                 if (imagesVisible) {
-                    // Imágenes visibles: span 8
-                    thumb.style.gridRow = `${gridRow} / span 5`;
-                    thumb.style.gridColumn = `${gridColumn} / span 5`;
+                    // Imágenes visibles: span más grande
+                    thumb.style.gridRow = `${gridRow} / span ${largeSpan}`;
+                    thumb.style.gridColumn = `${gridColumn} / span ${largeSpan}`;
                 } else {
-                    // Imágenes ocultas: span 3
-                    thumb.style.gridRow = `${gridRow} / span 2`;
-                    thumb.style.gridColumn = `${gridColumn} / span 2`;
+                    // Imágenes ocultas: span normal
+                    thumb.style.gridRow = `${gridRow} / span ${thumbSpan}`;
+                    thumb.style.gridColumn = `${gridColumn} / span ${thumbSpan}`;
                 }
             }
         });
@@ -514,29 +528,35 @@ if (vistaGlobalBtn) {
             const categorias = [...new Set(trabajosData.map(t => t.categoria))];
             const numCategorias = categorias.length;
             
+            // Leer configuración de vista global desde CSS
+            const rootStyles = getComputedStyle(document.documentElement);
+            const globalViewCols = parseInt(rootStyles.getPropertyValue('--global-view-cols')) || 2;
+            const globalViewRows = rootStyles.getPropertyValue('--global-view-rows').trim() === 'auto' 
+                ? Math.ceil(numCategorias / globalViewCols) 
+                : parseInt(rootStyles.getPropertyValue('--global-view-rows')) || 2;
+            
             // Calcular distribución de grupos en el viewport
-            // Si hay 4 categorías: 2x2, si hay 3: 2x2 (1 vacío), etc.
-            const cols = Math.ceil(Math.sqrt(numCategorias));
-            const rows = Math.ceil(numCategorias / cols);
+            const cols = globalViewCols;
+            const rows = globalViewRows;
             
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-            const margin = 80; // Margen de respiro
+            const margin = viewportWidth <= 480 ? 40 : 80; // Menos margen en móvil
             
             // Espacio disponible para cada grupo
             const groupWidth = (viewportWidth - margin * 2) / cols;
             const groupHeight = (viewportHeight - margin * 2) / rows;
             
             // Configuración de thumbs dentro de cada grupo
-            const thumbsPerRow = 6;
+            const thumbsPerRow = viewportWidth <= 480 ? 3 : 6; // Menos thumbs por fila en móvil
             const thumbSpan = 1;
             const gapSpan = 1;
             const totalSpanPerRow = thumbsPerRow * (thumbSpan + gapSpan);
             
             // Tamaño de cada thumb basado en el espacio del grupo
             const thumbSize = Math.min(
-                (groupWidth - 100) / thumbsPerRow, // -100 para margen interno
-                60 // Tamaño máximo
+                (groupWidth - (viewportWidth <= 480 ? 40 : 100)) / thumbsPerRow,
+                viewportWidth <= 480 ? 50 : 60 // Tamaño máximo adaptado
             );
             
             categorias.forEach((categoria, catIndex) => {
@@ -570,7 +590,7 @@ if (vistaGlobalBtn) {
                 categoryTitle.className = 'category-title';
                 categoryTitle.textContent = categoria;
                 categoryTitle.style.cssText = `
-                    position: fixed;
+                    position: absolute;
                     left: ${groupBaseX + offsetX}px;
                     top: ${groupBaseY + offsetY - 30}px;
                     font-size: 14px;
@@ -601,8 +621,8 @@ if (vistaGlobalBtn) {
                     const thumbX = groupBaseX + offsetX + (colInGroup * thumbSize);
                     const thumbY = groupBaseY + offsetY + (rowInGroup * thumbSize);
                     
-                    // Aplicar position fixed
-                    thumb.style.position = 'fixed';
+                    // Aplicar position absolute en lugar de fixed para permitir scroll
+                    thumb.style.position = 'absolute';
                     thumb.style.left = `${thumbX}px`;
                     thumb.style.top = `${thumbY}px`;
                     thumb.style.width = `${thumbSize}px`;
@@ -667,10 +687,14 @@ if (vistaGlobalBtn) {
                 thumb.style.width = '';
                 thumb.style.height = '';
                 
-                // Restaurar posiciones originales
+                // Leer configuración actual de CSS para restaurar correctamente
+                const rootStyles = getComputedStyle(document.documentElement);
+                const thumbSpan = parseInt(rootStyles.getPropertyValue('--grid-thumb-span')) || 2;
+                
+                // Restaurar posiciones originales con el span correcto
                 if (posicionesOriginales[index]) {
-                    thumb.style.gridRow = `${posicionesOriginales[index].gridRow} / span 2`;
-                    thumb.style.gridColumn = `${posicionesOriginales[index].gridColumn} / span 2`;
+                    thumb.style.gridRow = `${posicionesOriginales[index].gridRow} / span ${thumbSpan}`;
+                    thumb.style.gridColumn = `${posicionesOriginales[index].gridColumn} / span ${thumbSpan}`;
                     thumb.style.aspectRatio = '1 / 1';
                 }
             });
@@ -694,7 +718,6 @@ if (vistaGlobalBtn) {
             
     });
 }
-
 
 // 7.- HOVER EFFECT - MOSTRAR IMAGEN
 
