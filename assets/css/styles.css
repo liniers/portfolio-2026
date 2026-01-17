@@ -1,10 +1,20 @@
 /* RESET BÁSICO */
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica', 'Futura', 'JetBrains Mono', monospace; /* Asegúrate del nombre correcto de la fuente */
+    color: var(--color-text);
+}
+
+/* VARIABLES DE TEMA Y GRID */
+
 :root {
     --color-text: #FAF4E4;
     --color-bg: #191922;
     
-    /* 🎛️ CONFIGURACIÓN GRID - DESKTOP */
+    /* CONFIGURACIÓN GRID - DESKTOP */
     --grid-template-cols: 72;         /* Número de columnas del grid */
     --grid-items-per-row-1: 6;        /* Elementos en fila 1 (par) */
     --grid-items-per-row-2: 5;        /* Elementos en fila 2 (impar) */
@@ -15,7 +25,7 @@
     --grid-start-row: 0;              /* Fila inicial en el grid */
     --grid-start-col: 6;              /* Columna inicial en el grid */
     
-    /* 📐 CONFIGURACIÓN VISTA GLOBAL - DESKTOP */
+    /* CONFIGURACIÓN VISTA GLOBAL - DESKTOP */
     --global-view-cols: 3;            /* Columnas para grupos en vista global */
     --global-view-rows: 2;            /* Filas para grupos en vista global */
     --global-thumbs-per-row: 6;       /* Thumbs por fila dentro de cada grupo */
@@ -29,7 +39,7 @@
     --color-bg: #FAF4E4;
 }
 
-/* 📱 CONFIGURACIÓN GRID - MOBILE */
+/* CONFIGURACIÓN GRID - MOBILE */
 @media (max-width: 768px) {
     :root {
         --grid-template-rows: 48;         /* Menos filas en tablet */
@@ -53,7 +63,7 @@
     }
 }
 
-/* 📱 CONFIGURACIÓN GRID - EXTRA SMALL */
+/* CONFIGURACIÓN GRID - EXTRA SMALL */
 @media (max-width: 480px) {
     :root {
         --grid-template-cols: 3;         
@@ -66,7 +76,7 @@
         --grid-start-row: 1;             
         --grid-start-col: 1;             
         
-        /* 📐 CONFIGURACIÓN VISTA GLOBAL - MÓVIL */
+        /* CONFIGURACIÓN VISTA GLOBAL - MÓVIL */
         --global-view-cols: 1;            /* 1 columna en móvil (vertical) */
         --global-view-rows: auto;         /* Filas automáticas */
         --global-thumbs-per-row: 3;       /* 3 thumbs por fila en móvil */
@@ -76,15 +86,7 @@
     }
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Helvetica', 'Futura', 'JetBrains Mono', monospace; /* Asegúrate del nombre correcto de la fuente */
-    color: var(--color-text);
 
-
-}
 
 body {
     overflow-x: hidden; 
@@ -109,7 +111,7 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     grid-area: 1 / 1 / 2 / 2;
-    position: sticky;
+    position: fixed;
     top: 1rem;
     z-index: 99;
 }
@@ -216,7 +218,7 @@ body {
     width: 258px;
     position: fixed;
     top: 0;
-    left: 1rem; /* Alineado con el padding del layout */
+    left: 1rem; 
     z-index: 90;
     font-size: .825rem;
     pointer-events: none; /* Deshabilita interacción por detrás */
@@ -508,14 +510,6 @@ body {
 [class*="thumb-"] {
     cursor: pointer;
 }
-
-/* Prevenir flash en work-template - elementos empiezan ocultos */
-/* body:has(.thumbs-grid:not(.thumbs-grid .thumbs-grid)) .main-header, */
-/* body:has(.thumbs-grid:not(.thumbs-grid .thumbs-grid)) .back,
-body:has(.thumbs-grid:not(.thumbs-grid .thumbs-grid)) .thumbnail,
-body:has(.thumbs-grid:not(.thumbs-grid .thumbs-grid)) .work-info {
-    opacity: 0;
-} */
 
 
 /* VIDEO CONTROLS */
