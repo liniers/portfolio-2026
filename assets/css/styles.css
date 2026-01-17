@@ -28,9 +28,9 @@
     /* CONFIGURACIÓN VISTA GLOBAL - DESKTOP */
     --global-view-cols: 3;            /* Columnas para grupos en vista global */
     --global-view-rows: 2;            /* Filas para grupos en vista global */
-    --global-thumbs-per-row: 6;       /* Thumbs por fila dentro de cada grupo */
-    --global-category-spacing: 60;    /* Espaciado vertical entre categorías (px) */
-    --global-title-spacing: 30;       /* Espaciado entre título y thumbs (px) */
+    --global-thumbs-per-row: 8;       /* Thumbs por fila dentro de cada grupo */
+    --global-category-spacing: 48;    /* Espaciado vertical entre categorías (px) */
+    --global-title-spacing: 24;       /* Espaciado entre título y thumbs (px) */
     --global-title-size: 20;          /* Tamaño del texto del título (px) */
 }
 
@@ -39,7 +39,7 @@
     --color-bg: #FAF4E4;
 }
 
-/* CONFIGURACIÓN GRID - MOBILE */
+/* CONFIGURACIÓN GRID - Tablet */
 @media (max-width: 768px) {
     :root {
         --grid-template-rows: 48;         /* Menos filas en tablet */
@@ -63,7 +63,7 @@
     }
 }
 
-/* CONFIGURACIÓN GRID - EXTRA SMALL */
+/* CONFIGURACIÓN GRID - Mobile */
 @media (max-width: 480px) {
     :root {
         --grid-template-cols: 3;         
@@ -412,28 +412,38 @@ body {
 
 .quick-view {
     position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    /* transform: translate(50%, -50%); */
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
     padding: 3rem 2rem;
     border-radius: 32px;
     z-index: 1000;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     gap: 2rem;
-    width: 24px;
-    height: 24px;
-    opacity: 0;
+    width: 960px;
+    max-width: 90vw;
+    height: auto;
     overflow-y: auto;
     backdrop-filter: blur(50px);
+    opacity: 0;
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.2'/%3E%3C/svg%3E");    background-size: cover;
     /* background: #00000015; */
     background-position: center;
 }   
 
-.media {
-    width: 100%;
+.quick-view .media {
+    width: 50%;
+    height: inherit;
+    border-radius: .5rem;
+    background-size: cover;
+    background-position: center;
+}
+.quick-view .media video, .quick-view .media img {
+    width: 50%;
     height: inherit;
     border-radius: .5rem;
     background-size: cover;
@@ -598,4 +608,14 @@ button.nav-control-btn.next-btn {
 
 .mute-btn[data-state="unmuted"] {
     /* Añade aquí estilos para cuando está con sonido */
+}
+
+@media (max-width: 480px) {
+    .quick-view {
+        flex-direction: column;
+    }
+    
+    .quick-view .media {
+        width: 100%;
+    }
 }

@@ -909,6 +909,7 @@ function setupQuickView() {
                 const mediaContainer = quickView.querySelector('.media');
                 const workTitle = quickView.querySelector('.work-title');
                 const workDetails = quickView.querySelector('.work-details');
+                const workInfoEl = quickView.querySelector('.work-info');
                 
                 // Limpiar contenido anterior
                 mediaContainer.innerHTML = '';
@@ -1012,7 +1013,14 @@ function setupQuickView() {
                 
                 // Actualizar textos
                 workTitle.textContent = trabajo.titulo;
-                workDetails.textContent = trabajo.descripcion || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+                if (workDetails) {
+                    workDetails.textContent = trabajo.descripcion || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+                } else if (workInfoEl) {
+                    const newDetails = document.createElement('p');
+                    newDetails.className = 'work-details';
+                    newDetails.textContent = trabajo.descripcion || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+                    workInfoEl.appendChild(newDetails);
+                }
             };
             
             // Si ya estaba activo, hacer fade del contenido antes de cambiar
@@ -1065,36 +1073,28 @@ function setupQuickView() {
                 }, '+=0.3'); // Pequeño delay para que empiece el fade in mientras se expande
                 
             } else {
-                // Primera activación - animar contenedor primero
-                updateQuickViewContent();
-                
-                // Establecer height auto para que se adapte al contenido
-                quickView.style.height = 'auto';
-                
-                // Centrar el quick-view en la pantalla
-                quickView.style.position = 'fixed';
-                quickView.style.top = '50%';
-                quickView.style.left = '50%';
-                quickView.style.right = 'auto';
-                quickView.style.bottom = 'auto';
-                quickView.style.transform = 'translate(-50%, -50%)';
+                // Primera activación - preparar y animar contenedor
+                // Asegurar que el elemento esté visible (si fue ocultado con display:none al cerrar)
                 quickView.style.display = 'flex';
-                
+                // Resetear opacidades internas para la animación
+                if (workInfo) workInfo.style.opacity = '0';
+                const mediaContainerEl = quickView.querySelector('.media');
+                if (mediaContainerEl) mediaContainerEl.style.opacity = '0';
+
+                updateQuickViewContent();
+
                 // Mostrar scrim
                 scrim.style.opacity = '1';
                 scrim.style.pointerEvents = 'auto';
-                
+
                 // Animar quick-view desde escala pequeña
                 gsap.fromTo(quickView, 
                     {
-                        scale: 0.9,
+                        scale: 0.8,
                         opacity: 0
                     },
                     {
                         scale: 1,
-                        width: '600px',
-                        maxWidth: '90vw',
-                        maxHeight: '90vh',
                         opacity: 1,
                         duration: 0.5,
                         ease: 'power3.out',
@@ -1105,6 +1105,9 @@ function setupQuickView() {
                                     duration: 0.3,
                                     ease: 'power2.out'
                                 });
+                            }
+                            if (mediaContainerEl) {
+                                gsap.to(mediaContainerEl, { opacity: 1, duration: 0.3 });
                             }
                         }
                     }

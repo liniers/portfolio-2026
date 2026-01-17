@@ -85,6 +85,7 @@ function updateQuickViewWithProject(trabajo) {
     const mediaContainer = quickView.querySelector('.media');
     const workTitle = quickView.querySelector('.work-title');
     const workDetails = quickView.querySelector('.work-details');
+    const workInfoEl = quickView.querySelector('.work-info');
     
     // Limpiar contenido anterior
     mediaContainer.innerHTML = '';
@@ -179,7 +180,14 @@ function updateQuickViewWithProject(trabajo) {
     
     // Actualizar información del trabajo
     workTitle.textContent = trabajo.titulo;
-    workDetails.textContent = `${trabajo.cliente} - ${trabajo.fecha}`;
+    if (workDetails) {
+        workDetails.textContent = `${trabajo.cliente} - ${trabajo.fecha}`;
+    } else if (workInfoEl) {
+        const newDetails = document.createElement('p');
+        newDetails.className = 'work-details';
+        newDetails.textContent = `${trabajo.cliente} - ${trabajo.fecha}`;
+        workInfoEl.appendChild(newDetails);
+    }
     
     // Actualizar proyecto actual
     currentProject = trabajo;
