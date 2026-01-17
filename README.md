@@ -15,14 +15,23 @@ Ha consistido principalmente en preparar una serie de "funcionalidades base" par
 Los programas / funcionalidades / bloques de codigo que he ido incluyendo son las siguientes:
 
 1.- Maquetar thumbs: a partir del data.json se extrae los datos para el portfolio para maquetar un grid allterno de 6 y 5 miniaturas.
+
 2.- GSAP + Lenis Setup: Lenis es una librería que aporta un suavizado en el scroll.
+
 3.- Toggle botones vista grid / vista global: Los botones inferiores cambian de vista grid (aleatoria) a vista global (filtrada por categorías), para dar una visión global y organizada de los proyecto.
+
 4.- Animación texto tubo 3D: Este efecto de GSAP interactua con el scroll para "rodar" un tubo de texto 3D. Edité el original de un codepen manualmente para que estuviera sincronizado con el scroll.
+
 5.- Toggle de imágenes: Esta funcionalidad permite mostrar u ocultar las imágenes del portfolio.
+
 6.- Hover Effect - Mostrar imagen: Se trata de una interacción de hover sobre las miniaturas ocultas.
+
 8.- Motion Thumbs - Parallax con Stagger: Este es un efecto de parallax hecho con GSAP para dar una sensación extra de coreografía y suavidad en el scroll.
+
 9.- Morph SVG: Se ha trabajado en un .js (svg-animations) a parte la animación del avatar a partir del plugin Morph GSAP. Todo manualmente.
+
 10.- Quick View Function: Es una previsualización del trabajo que se abre al hacer click. A modo de overlay. Esta pantalla la quiero mejorar para que sea más interesante. De momento, he incluido controles de atrás y adelante para recorrer la categoría relativa al proyecto + controles de pausa y mute en vídeos. Este bloque de código está también en un .js a parte (gallery-navigation).
+
 11. Modos claro y oscuro: El uso semántico del color es muy sencillo, solo hay dos variables, una para el fondo y otra para el texto, que se invierten dependiendo del modo seleccionado.
 
 Como podréis ver, me he ido apoyando de la IA (sobretodo en el js) para ir creando estas funcionalidades. Todas las he ido leyendo y manipulando a medida que iba necesitando. Pero aún me queda bastante trabajo de limpieza.
