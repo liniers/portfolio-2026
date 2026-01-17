@@ -5,12 +5,11 @@
     --color-bg: #191922;
     
     /* 🎛️ CONFIGURACIÓN GRID - DESKTOP */
-    --grid-template-rows: 72;         /* Número de filas del grid */
     --grid-template-cols: 72;         /* Número de columnas del grid */
     --grid-items-per-row-1: 6;        /* Elementos en fila 1 (par) */
     --grid-items-per-row-2: 5;        /* Elementos en fila 2 (impar) */
     --grid-spacing-horizontal: 12;    /* Espaciado horizontal entre thumbs */
-    --grid-spacing-vertical: 8;       /* Espaciado vertical entre filas */
+    --grid-spacing-vertical: 4;       /* Espaciado vertical entre filas */
     --grid-thumb-span: 2;             /* Tamaño del thumb (span en grid) */
     --grid-thumb-span-large: 5;       /* Tamaño del thumb cuando imágenes visibles */
     --grid-start-row: 0;              /* Fila inicial en el grid */
@@ -19,6 +18,10 @@
     /* 📐 CONFIGURACIÓN VISTA GLOBAL - DESKTOP */
     --global-view-cols: 3;            /* Columnas para grupos en vista global */
     --global-view-rows: 2;            /* Filas para grupos en vista global */
+    --global-thumbs-per-row: 6;       /* Thumbs por fila dentro de cada grupo */
+    --global-category-spacing: 60;    /* Espaciado vertical entre categorías (px) */
+    --global-title-spacing: 30;       /* Espaciado entre título y thumbs (px) */
+    --global-title-size: 20;          /* Tamaño del texto del título (px) */
 }
 
 [data-theme="light"] {
@@ -43,6 +46,10 @@
         /* 📐 CONFIGURACIÓN VISTA GLOBAL - TABLET */
         --global-view-cols: 2;            /* 2 columnas en tablet */
         --global-view-rows: auto;         /* Filas automáticas */
+        --global-thumbs-per-row: 4;       /* Menos thumbs por fila en tablet */
+        --global-category-spacing: 50;    /* Menos espaciado entre categorías */
+        --global-title-spacing: 30;       /* Menos espaciado título-thumbs */
+        --global-title-size: 13;          /* Tamaño del título en tablet */
     }
 }
 
@@ -62,6 +69,10 @@
         /* 📐 CONFIGURACIÓN VISTA GLOBAL - MÓVIL */
         --global-view-cols: 1;            /* 1 columna en móvil (vertical) */
         --global-view-rows: auto;         /* Filas automáticas */
+        --global-thumbs-per-row: 3;       /* 3 thumbs por fila en móvil */
+        --global-category-spacing: 40;    /* Espaciado entre categorías en móvil */
+        --global-title-spacing: 20;       /* Espaciado título-thumbs en móvil */
+        --global-title-size: 12;          /* Tamaño del título en móvil */
     }
 }
 

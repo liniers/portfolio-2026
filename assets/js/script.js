@@ -158,7 +158,7 @@ function maquetar_thumbs(data){
 
 const lenis = new Lenis({
     //infinite: true, 
-    syncTouch: true,
+    syncTouch: true, 
 });
 
 function onRaf(time) {
@@ -517,11 +517,16 @@ if (vistaGlobalBtn) {
             }
 
             
-            // Matar ScrollTriggers del parallax
+            // Matar ScrollTriggers del parallax y limpiar transforms
             ScrollTrigger.getAll().forEach(st => {
                 if (st.vars && st.vars.trigger === document.querySelector("#portfolio-items")) {
                     st.kill();
                 }
+            });
+            
+            // Limpiar transforms de parallax de todos los thumbs
+            thumbs.forEach(thumb => {
+                gsap.set(thumb, { y: 0, clearProps: "transform" });
             });
             
             // Obtener categorías únicas
@@ -534,6 +539,10 @@ if (vistaGlobalBtn) {
             const globalViewRows = rootStyles.getPropertyValue('--global-view-rows').trim() === 'auto' 
                 ? Math.ceil(numCategorias / globalViewCols) 
                 : parseInt(rootStyles.getPropertyValue('--global-view-rows')) || 2;
+            const thumbsPerRow = parseInt(rootStyles.getPropertyValue('--global-thumbs-per-row')) || 6;
+            const categorySpacing = parseInt(rootStyles.getPropertyValue('--global-category-spacing')) || 60;
+            const titleSpacing = parseInt(rootStyles.getPropertyValue('--global-title-spacing')) || 40;
+            const titleSize = parseInt(rootStyles.getPropertyValue('--global-title-size')) || 14;
             
             // Calcular distribución de grupos en el viewport
             const cols = globalViewCols;
@@ -545,10 +554,8 @@ if (vistaGlobalBtn) {
             
             // Espacio disponible para cada grupo
             const groupWidth = (viewportWidth - margin * 2) / cols;
-            const groupHeight = (viewportHeight - margin * 2) / rows;
             
             // Configuración de thumbs dentro de cada grupo
-            const thumbsPerRow = viewportWidth <= 480 ? 3 : 6; // Menos thumbs por fila en móvil
             const thumbSpan = 1;
             const gapSpan = 1;
             const totalSpanPerRow = thumbsPerRow * (thumbSpan + gapSpan);
@@ -558,6 +565,9 @@ if (vistaGlobalBtn) {
                 (groupWidth - (viewportWidth <= 480 ? 40 : 100)) / thumbsPerRow,
                 viewportWidth <= 480 ? 50 : 60 // Tamaño máximo adaptado
             );
+            
+            // Variable para tracking de posición vertical acumulativa
+            let currentY = margin;
             
             categorias.forEach((categoria, catIndex) => {
                 // Obtener thumbs de esta categoría
@@ -569,17 +579,27 @@ if (vistaGlobalBtn) {
                 const groupCol = catIndex % cols;
                 const groupRow = Math.floor(catIndex / cols);
                 
-                // Posición base del grupo (centrado en su celda)
-                const groupBaseX = margin + (groupCol * groupWidth) + (groupWidth / 2);
-                const groupBaseY = margin + (groupRow * groupHeight) + (groupHeight / 2);
-                
-                // Calcular filas necesarias para esta categoría
+                // Calcular filas necesarias para esta categoría ANTES de calcular posición
                 const numThumbsInCat = thumbsEnCategoria.length;
                 const numRows = Math.ceil(numThumbsInCat / thumbsPerRow);
+                const blockHeight = numRows * thumbSize;
+                
+                // Posición base del grupo
+                const groupBaseX = margin + (groupCol * groupWidth) + (groupWidth / 2);
+                
+                // En móvil (1 columna) usar posición vertical acumulativa
+                // En desktop/tablet usar grid basado en viewport
+                let groupBaseY;
+                if (viewportWidth <= 480) {
+                    groupBaseY = currentY + blockHeight / 2 + titleSpacing; // Usar variable de espaciado
+                    currentY = currentY + blockHeight + categorySpacing; // Usar variable de espaciado entre categorías
+                } else {
+                    const groupHeight = (viewportHeight - margin * 2) / rows;
+                    groupBaseY = margin + (groupRow * groupHeight) + (groupHeight / 2);
+                }
                 
                 // Dimensiones totales del bloque de thumbs
                 const blockWidth = thumbsPerRow * thumbSize;
-                const blockHeight = numRows * thumbSize;
                 
                 // Offset para centrar el bloque
                 const offsetX = -blockWidth / 2;
@@ -592,13 +612,13 @@ if (vistaGlobalBtn) {
                 categoryTitle.style.cssText = `
                     position: absolute;
                     left: ${groupBaseX + offsetX}px;
-                    top: ${groupBaseY + offsetY - 30}px;
-                    font-size: 14px;
+                    top: ${groupBaseY + offsetY - titleSpacing}px;
+                    font-size: ${titleSize}px;
                     font-weight: 500;
                     color: var(--color-text);
                     opacity: 0;
                     pointer-events: none;
-                    z-index: 100;
+                    z-index: 1000;
                 `;
                 document.body.appendChild(categoryTitle);
                 window.categoryTitles.push(categoryTitle);
@@ -625,6 +645,8 @@ if (vistaGlobalBtn) {
                     thumb.style.position = 'absolute';
                     thumb.style.left = `${thumbX}px`;
                     thumb.style.top = `${thumbY}px`;
+                    thumb.style.zIndex = '1'; // Z-index explícito para thumbs
+                    thumb.style.willChange = 'auto'; // Desactivar will-change para que z-index funcione
                     thumb.style.width = `${thumbSize}px`;
                     thumb.style.height = `${thumbSize}px`;
                     thumb.style.gridRow = 'auto';
